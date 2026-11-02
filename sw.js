@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
-const CACHE = 'macchina-shell-v3';
+const CACHE = 'macchina-shell-v4';
 const SHELL = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL.map(path => new Request(path, {cache: 'reload'})))));
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('macchina-shell-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));

@@ -57,7 +57,7 @@ Aprire http://localhost:8000 per la prova locale. Da un telefono usare l'URL HTT
 
 GitHub Pages pubblica `main` dalla cartella `/` del repository pubblico. Impostazione in Settings → Pages → Deploy from a branch. Nessuna chiave API necessaria. I percorsi relativi supportano il sottopercorso `/macchina/`.
 
-Quando cambia la shell, incrementare `CACHE` in `sw.js`. La nuova versione attende la chiusura delle vecchie schede prima di attivarsi: non mescola file di versioni diverse. La cache del parcheggio rimane indipendente dalla cache dell'app.
+Quando cambia la shell, incrementare `CACHE` in `sw.js`. La nuova versione si attiva subito; la pagina si ricarica quando cambia il worker, salvo un salvataggio GPS in corso. La navigazione online usa HTML aggiornato; offline usa la shell salvata. Incrementare anche il parametro versione di app.js/style.css in index.html e SHELL quando cambiano i relativi file. La cache del parcheggio rimane indipendente dalla cache dell'app.
 
 ## Licenza
 

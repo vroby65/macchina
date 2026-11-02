@@ -64,7 +64,18 @@ window.addEventListener('online', connection);
 window.addEventListener('offline', connection);
 connection();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(() => navigator.serviceWorker.ready).then(() => {
+  const wasControlled = Boolean(navigator.serviceWorker.controller);
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (wasControlled && !reloading && !park.disabled) {
+      reloading = true;
+      window.location.reload();
+    }
+  });
+  navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).then(registration => {
+    registration.update().catch(() => {});
+    return navigator.serviceWorker.ready;
+  }).then(() => {
     document.querySelector('#cache-status').textContent = 'App pronta anche offline. Il percorso richiede Google Maps.';
   }).catch(() => {
     document.querySelector('#cache-status').textContent = 'Modalità offline non disponibile. Riapri la pagina con Internet per riprovare.';

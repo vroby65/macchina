@@ -6,5 +6,5 @@ Invarianti: un solo parcheggio in `macchina.parking.v1`, sostituito solo dopo sa
 
 Verifica: `npm test`. Per prova manuale: `python3 -m http.server 8000`, poi aprire localhost:8000. Su telefono usare HTTPS pubblico. Provare permesso concesso/negato, salvataggio e sostituzione, riapertura, percorso a piedi, installazione e riapertura offline dopo prima visita online.
 
-Pubblicazione: GitHub Pages dal branch main, cartella root. `.github/workflows/test.yml` esegue test su push e pull request. Incrementare CACHE in `sw.js` quando cambiano le risorse della shell; chiudere le schede per attivare una versione in attesa. Usare percorsi relativi per /macchina/.
+Pubblicazione: GitHub Pages dal branch main, cartella root. `.github/workflows/test.yml` esegue test su push e pull request. Incrementare CACHE in `sw.js` quando cambiano le risorse della shell; il worker si attiva subito. Versionare anche i riferimenti app.js/style.css in index.html e SHELL. HTML online dalla rete, offline dalla cache. Il cambio worker ricarica la pagina solo se non è in corso un salvataggio GPS. Usare percorsi relativi per /macchina/.
 Aggiornare questa guida e README quando cambiano architettura, invarianti o comandi. Non aggiungere credenziali o coordinate personali al repository.

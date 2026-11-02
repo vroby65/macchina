@@ -84,27 +84,40 @@ if ('serviceWorker' in navigator) {
 
 let installPrompt = null;
 const install = document.querySelector('#install');
+const guide = document.querySelector('#install-guide');
+const installNow = document.querySelector('#install-now');
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+document.querySelector('#android-install').hidden = isIOS;
+document.querySelector('#ios-install').hidden = !isIOS;
+install.hidden = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 function installGuide() {
-  const guide = document.querySelector('#install-guide');
-  guide.open = true;
-  guide.querySelector('summary').focus();
+  if (!guide.open) guide.showModal();
+  document.querySelector('#install-close').focus();
 }
+document.querySelector('#install-close').addEventListener('click', () => guide.close());
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
   installPrompt = event;
+  installNow.hidden = false;
 });
 window.addEventListener('appinstalled', () => {
   installPrompt = null;
   install.hidden = true;
+  guide.close();
   say('App installata. Aprila dalla nuova icona.');
 });
-install.addEventListener('click', async () => {
+async function installApp() {
   if (!installPrompt) { installGuide(); return; }
   const prompt = installPrompt;
   installPrompt = null;
+  installNow.hidden = true;
   try {
     await prompt.prompt();
     const choice = await prompt.userChoice;
-    if (choice.outcome !== 'accepted') installGuide();
+    if (choice.outcome === 'accepted') guide.close();
+    else installGuide();
   } catch { installGuide(); }
-});
+}
+install.addEventListener('click', installApp);
+installNow.addEventListener('click', installApp);

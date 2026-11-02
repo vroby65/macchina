@@ -1,5 +1,5 @@
 # Manutenzione
-PWA statica italiana per anziani, mobile-first, senza backend o dipendenze di produzione. Mantenere testi essenziali, caratteri grandi (almeno 22 px per i contenuti) e due pulsanti principali alti almeno 150 px. Dettagli tecnici e privacy restano richiudibili.
+PWA statica italiana per anziani, mobile-first, senza backend o dipendenze di produzione. Mantenere testi essenziali, caratteri grandi (almeno 22 px per i contenuti) e due pulsanti principali alti almeno 150 px. Dettagli tecnici e privacy restano richiudibili. Installazione: un solo pulsante, richiesta nativa se disponibile, altrimenti dialog con tre passaggi per il dispositivo; su Android link esplicito per aprire Chrome. Nascondere il pulsante in modalità standalone.
 `index.html` e `style.css`: interfaccia; `app.js`: GPS, localStorage, Maps; `manifest.webmanifest` e `icons/`: installazione; `sw.js`: cache offline limitata a questo percorso.
 
 Invarianti: un solo parcheggio in `macchina.parking.v1`, sostituito solo dopo salvataggio persistente riuscito. Il GPS parte solo al clic. Nessuna chiamata a Google prima dell'apertura del percorso. Non inviare coordinate a server o analytics. Gli errori non cancellano il parcheggio precedente.

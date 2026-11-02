@@ -6,14 +6,14 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const saved = {latitude:45.4,longitude:9.2,accuracy:12,timestamp:1793630000000};
-function app({raw=null, readError=false, writeError=false, geo=true, secure=true, serviceWorker=null}={}) {
+function app({raw=null, readError=false, writeError=false, geo=true, secure=true, serviceWorker=null, userAgent="Android Chrome", standalone=false}={}) {
  const elements = {};
- for (const id of ['park','find','message','position','details','offline','cache-status','install','install-guide']) elements[id] = {textContent:'',attrs:{},listeners:{},classList:{toggle(){}},querySelector(){return {focus(){}}},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]; delete this[k]},addEventListener(k,f){this.listeners[k]=f}};
+ for (const id of ['park','find','message','position','details','offline','cache-status','install','install-guide','install-now','install-close','android-install','ios-install']) elements[id] = {textContent:'',open:false,focus(){},showModal(){this.open=true},close(){this.open=false},attrs:{},listeners:{},classList:{toggle(){}},querySelector(){return {focus(){}}},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]; delete this[k]},addEventListener(k,f){this.listeners[k]=f}};
  let value=raw, request, calls=0; const windowListeners={};
- const navigator={onLine:true}; let reloads=0;
+ const navigator={onLine:true,userAgent}; let reloads=0;
  if(serviceWorker) navigator.serviceWorker=serviceWorker;
  if(geo) navigator.geolocation={getCurrentPosition(ok,fail,options){request={ok,fail,options}; calls++}};
- vm.runInNewContext(source,{document:{querySelector:s=>elements[s.slice(1)]},navigator,window:{location:{reload(){reloads++}},isSecureContext:secure,addEventListener(k,f){windowListeners[k]=f}},localStorage:{getItem(){if(readError)throw Error();return value},setItem(k,v){if(writeError)throw Error();value=v}},URL,Date,console});
+ vm.runInNewContext(source,{document:{querySelector:s=>elements[s.slice(1)]},navigator,window:{matchMedia(){return {matches:standalone}},location:{reload(){reloads++}},isSecureContext:secure,addEventListener(k,f){windowListeners[k]=f}},localStorage:{getItem(){if(readError)throw Error();return value},setItem(k,v){if(writeError)throw Error();value=v}},URL,Date,console});
  return {elements,windowListeners,get reloads(){return reloads},click(){elements.park.listeners.click()},get request(){return request},get calls(){return calls},get value(){return value},success(p=saved){request.ok({coords:p,timestamp:p.timestamp})}};
 }
 test('nessun GPS all’avvio; trova senza parcheggio non naviga',()=>{const a=app();assert.equal(a.calls,0);let prevented=false;a.elements.find.listeners.click({preventDefault(){prevented=true}});assert.equal(prevented,true);assert.equal(a.elements.find.attrs['aria-disabled'],'true')});
@@ -33,10 +33,10 @@ test('worker installa tutta la shell e la restituisce senza rete',async()=>{
  class ShellRequest { constructor(url,options){this.url=new URL(url,'https://example.org/macchina/').href;this.cache=options.cache} }
  const cache={async addAll(files){for(const file of files){assert.equal(file.cache,'reload');entries.set(file.url,'cached:'+file.url)}},async match(req){return entries.get(typeof req==='string'?new URL(req,'https://example.org/macchina/').href:req.url)}};
  const removed=[];
- vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},async skipWaiting(){},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,Request:ShellRequest,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v6']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
+ vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},async skipWaiting(){},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,Request:ShellRequest,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v7']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
  let pending;listeners.install({waitUntil(p){pending=p}});await pending;assert.ok(entries.size>=9);
  listeners.activate({waitUntil(p){pending=p}});await pending;assert.deepEqual(removed,['macchina-shell-v0']);assert.equal(claimed,true);
- for(const [file,mode] of [['app.js?v=6','cors'],['','navigate'],['unknown','navigate']]){listeners.fetch({request:{url:'https://example.org/macchina/'+file,method:'GET',mode},respondWith(p){pending=p}});assert.match(await pending,/cached:/)}
+ for(const [file,mode] of [['app.js?v=7','cors'],['','navigate'],['unknown','navigate']]){listeners.fetch({request:{url:'https://example.org/macchina/'+file,method:'GET',mode},respondWith(p){pending=p}});assert.match(await pending,/cached:/)}
 });
 
 test('installazione senza prompt apre istruzioni per iPhone e Android',async()=>{const a=app();await a.elements.install.listeners.click();assert.equal(a.elements['install-guide'].open,true)});
@@ -59,3 +59,8 @@ test('cambio worker non interrompe salvataggio GPS in corso',()=>{
  const listeners={};const serviceWorker={controller:{},ready:Promise.resolve(),addEventListener(k,f){listeners[k]=f},register(){return Promise.resolve({async update(){}})}};
  const a=app({serviceWorker});a.click();listeners.controllerchange();assert.equal(a.reloads,0);a.success();assert.deepEqual(JSON.parse(a.value),saved);
 });
+
+test('Android mostra solo i tre passaggi Android nella finestra',async()=>{const a=app();await a.elements.install.listeners.click();assert.equal(a.elements['install-guide'].open,true);assert.equal(a.elements['android-install'].hidden,false);assert.equal(a.elements['ios-install'].hidden,true);a.elements['install-close'].listeners.click();assert.equal(a.elements['install-guide'].open,false)});
+test('iPhone mostra solo i passaggi iPhone',async()=>{const a=app({userAgent:'iPhone Safari'});await a.elements.install.listeners.click();assert.equal(a.elements['android-install'].hidden,true);assert.equal(a.elements['ios-install'].hidden,false)});
+test('app già aperta dalla Home non propone installazione',()=>{assert.equal(app({standalone:true}).elements.install.hidden,true)});
+test('prompt disponibile in ritardo abilita installazione dalla guida',async()=>{const a=app();await a.elements.install.listeners.click();let prompted=0;a.windowListeners.beforeinstallprompt({preventDefault(){},async prompt(){prompted++},userChoice:Promise.resolve({outcome:'accepted'})});assert.equal(a.elements['install-now'].hidden,false);await a.elements['install-now'].listeners.click();assert.equal(prompted,1);assert.equal(a.elements['install-guide'].open,false)});

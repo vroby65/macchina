@@ -15,7 +15,7 @@ Il GPS può essere impreciso, soprattutto al chiuso e nei parcheggi multipiano. 
 
 ## Installazione Android e iPhone
 
-Tocca **Installa sul telefono** nell’app: apre la richiesta nativa su Android quando disponibile; altrimenti mostra le istruzioni per il browser. Su iPhone l’aggiunta alla Home va confermata in Safari.
+Tocca **Installa** nell’app: apre la richiesta nativa su Android quando disponibile; altrimenti apre una finestra con tre passaggi grandi per il telefono rilevato. Su Android è presente anche “Apri in Chrome”. Quando l’app è già aperta dalla Home, il pulsante non compare. Su iPhone l’aggiunta alla Home va confermata in Safari.
 
 - **Android / Chrome:** menu ⋮ → Aggiungi a schermata Home / Installa app.
 - **iPhone / Safari:** Condividi → Aggiungi alla schermata Home → se presente, attiva Apri come app web → Aggiungi.

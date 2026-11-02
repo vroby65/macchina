@@ -16,20 +16,18 @@
 </head>
 <body>
 <main>
-<header><span class="brand" aria-hidden="true">P<span class="dot">●</span></span><span>IL TUO PARCHEGGIO, RITROVATO.</span></header>
-<section class="intro"><p class="eyebrow">PARCHEGGIA. VIVI. RITORNA.</p><h1>Dov'è la mia<br>macchina?</h1><p>Un tocco per ricordare.<br>Un tocco per tornare.</p></section>
+<h1>Dov'è la mia<br>macchina?</h1>
 <div class="actions">
-<button id="park" class="action primary"><span class="symbol" aria-hidden="true">P</span><span><strong>Ho parcheggiato</strong><small>Salva la posizione di adesso</small></span><span aria-hidden="true">↓</span></button>
-<a id="find" class="action secondary" aria-disabled="true"><span class="symbol" aria-hidden="true">↗</span><span><strong>Trova la mia macchina</strong><small>Apri il percorso a piedi in Google Maps</small></span></a>
+<button id="park" class="action primary">Ho parcheggiato</button>
+<a id="find" class="action secondary" aria-disabled="true">Trova la mia<br>macchina</a>
 </div>
-<section class="saved" aria-labelledby="saved-title"><div class="saved-heading"><span class="status-dot" aria-hidden="true"></span><h2 id="saved-title">IL TUO ULTIMO PARCHEGGIO</h2></div><p id="position">Nessun parcheggio salvato.</p><p id="details">Quando parcheggi, premi il primo pulsante.</p></section>
+<p id="position" class="saved">Nessun parcheggio salvato.</p>
 <p id="message" role="status" aria-live="polite" aria-atomic="true"></p>
 <p id="offline" hidden>Sei offline. Puoi salvare il parcheggio; per il percorso Google Maps può richiedere Internet.</p>
-<p id="cache-status" class="hint"></p>
-<button id="install" class="install">Aggiungi al telefono <span aria-hidden="true">＋</span></button>
-<details id="install-guide"><summary>Come installare l’app</summary><div><p><b>iPhone:</b> apri questa pagina in Safari, tocca Condividi, poi “Aggiungi alla schermata Home”. Se presente, attiva “Apri come app web”, poi Aggiungi.</p><p><b>Android:</b> apri in Chrome, poi dal menu ⋮ scegli “Aggiungi a schermata Home” o “Installa app”.</p><p>Apri l’app installata e salva lì il parcheggio: browser e app possono avere memorie separate.</p></div></details>
-<details><summary>La tua posizione resta tua</summary><div><p>Un solo parcheggio, salvato sul dispositivo. Ogni nuovo salvataggio sostituisce il precedente. Nessun account, backend applicativo o tracciamento.</p><p>Solo “Trova la mia macchina” trasmette a Google le coordinate di destinazione. Google Maps gestisce il percorso e può chiedere accesso alla tua posizione. Il sito è ospitato da GitHub Pages, che riceve i normali dati di accesso web.</p><p>La posizione resta finché non la sostituisci o cancelli i dati del sito. La modalità privata e la pulizia automatica del browser possono eliminarla. Su GitHub Pages lo spazio locale è condiviso con altri siti dello stesso dominio: evita di usarlo per dati sensibili.</p></div></details>
-<footer>Due tocchi. Nessun account.<br><a href="https://github.com/vroby65/macchina">Codice aperto · GPL-3.0</a></footer>
+<button id="install" class="install">Installa sul telefono</button>
+<details id="install-guide"><summary>Come installare</summary><div><p><b>iPhone (Safari)</b><br>Condividi → Aggiungi alla schermata Home → Aggiungi.</p><p><b>Android (Chrome)</b><br>Menu ⋮ → Installa app o Aggiungi a schermata Home.</p><p>Poi apri l’app dalla nuova icona.</p></div></details>
+<details><summary>Dettagli e privacy</summary><div><p id="details"></p><p id="cache-status"></p><p>Un solo parcheggio, salvato sul dispositivo. Ogni nuovo salvataggio sostituisce il precedente. Nessun account, backend applicativo o tracciamento.</p><p>Solo “Trova la mia macchina” trasmette a Google le coordinate di destinazione. Google Maps gestisce il percorso e può chiedere accesso alla tua posizione. Il sito è ospitato da GitHub Pages, che riceve i normali dati di accesso web.</p><p>La posizione resta finché non la sostituisci o cancelli i dati del sito. La modalità privata e la pulizia automatica del browser possono eliminarla. Su GitHub Pages lo spazio locale è condiviso con altri siti dello stesso dominio: evita di usarlo per dati sensibili.</p></div></details>
+<footer><a href="https://github.com/vroby65/macchina">Codice aperto · GPL-3.0</a></footer>
 <noscript>Per salvare la posizione devi attivare JavaScript nel browser.</noscript>
 </main>
 </body></html>

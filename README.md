@@ -1,6 +1,6 @@
 # Dov'è la mia macchina?
 
-PWA mobile-first in italiano, senza account e senza backend applicativo.
+PWA mobile-first in italiano per anziani, con testo grande, due pulsanti principali e istruzioni secondarie richiudibili. Senza account e senza backend applicativo.
 
 **Apri l'app: https://vroby65.github.io/macchina/**
 
@@ -15,7 +15,7 @@ Il GPS può essere impreciso, soprattutto al chiuso e nei parcheggi multipiano. 
 
 ## Installazione Android e iPhone
 
-Tocca **Aggiungi al telefono** nell’app: apre la richiesta nativa su Android quando disponibile; altrimenti mostra le istruzioni per il browser. Su iPhone l’aggiunta alla Home va confermata in Safari.
+Tocca **Installa sul telefono** nell’app: apre la richiesta nativa su Android quando disponibile; altrimenti mostra le istruzioni per il browser. Su iPhone l’aggiunta alla Home va confermata in Safari.
 
 - **Android / Chrome:** menu ⋮ → Aggiungi a schermata Home / Installa app.
 - **iPhone / Safari:** Condividi → Aggiungi alla schermata Home → se presente, attiva Apri come app web → Aggiungi.

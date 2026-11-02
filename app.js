@@ -42,7 +42,7 @@ park.addEventListener('click', () => {
   if (!navigator.geolocation) { say('Questo browser non supporta il GPS. Prova Safari su iPhone o Chrome su Android.', true); return; }
   park.disabled = true;
   park.setAttribute('aria-busy', 'true');
-  say('Cerco la posizione… Consenti l’accesso al GPS, se richiesto.');
+  say('Attendi… Se richiesto, consenti la posizione.');
   function finish() { park.disabled = false; park.setAttribute('aria-busy', 'false'); }
   navigator.geolocation.getCurrentPosition(position => {
     const next = {latitude:position.coords.latitude, longitude:position.coords.longitude, accuracy:position.coords.accuracy, timestamp:position.timestamp};
@@ -52,7 +52,7 @@ park.addEventListener('click', () => {
     parking = next;
     render();
     finish();
-    say(next.accuracy > 100 ? 'Parcheggio salvato, ma il GPS è poco preciso. All’aperto puoi premere di nuovo “Ho parcheggiato” per migliorare la posizione.' : 'Parcheggio salvato. Ora puoi andare!');
+    say(next.accuracy > 100 ? 'Parcheggio salvato, ma il GPS è poco preciso. All’aperto puoi premere di nuovo “Ho parcheggiato” per migliorare la posizione.' : 'Parcheggio salvato!');
   }, error => {
     finish();
     const errors = {1:'Accesso alla posizione negato. Abilitalo nelle impostazioni del sito o del telefono, poi riprova.', 2:'Posizione non disponibile. Attiva la localizzazione e prova all’aperto.', 3:'La ricerca della posizione è scaduta. Spostati all’aperto e riprova.'};
@@ -85,7 +85,7 @@ window.addEventListener('beforeinstallprompt', event => {
 window.addEventListener('appinstalled', () => {
   installPrompt = null;
   install.hidden = true;
-  say('App aggiunta al telefono. Aprila dalla schermata Home.');
+  say('App installata. Aprila dalla nuova icona.');
 });
 install.addEventListener('click', async () => {
   if (!installPrompt) { installGuide(); return; }

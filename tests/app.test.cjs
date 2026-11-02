@@ -8,12 +8,12 @@ const source = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const saved = {latitude:45.4,longitude:9.2,accuracy:12,timestamp:1793630000000};
 function app({raw=null, readError=false, writeError=false, geo=true, secure=true}={}) {
  const elements = {};
- for (const id of ['park','find','message','position','details','offline','cache-status']) elements[id] = {textContent:'',attrs:{},listeners:{},classList:{toggle(){}},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]; delete this[k]},addEventListener(k,f){this.listeners[k]=f}};
- let value=raw, request, calls=0;
+ for (const id of ['park','find','message','position','details','offline','cache-status','install','install-guide']) elements[id] = {textContent:'',attrs:{},listeners:{},classList:{toggle(){}},querySelector(){return {focus(){}}},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]; delete this[k]},addEventListener(k,f){this.listeners[k]=f}};
+ let value=raw, request, calls=0; const windowListeners={};
  const navigator={onLine:true};
  if(geo) navigator.geolocation={getCurrentPosition(ok,fail,options){request={ok,fail,options}; calls++}};
- vm.runInNewContext(source,{document:{querySelector:s=>elements[s.slice(1)]},navigator,window:{isSecureContext:secure,addEventListener(){}},localStorage:{getItem(){if(readError)throw Error();return value},setItem(k,v){if(writeError)throw Error();value=v}},URL,Date,console});
- return {elements,click(){elements.park.listeners.click()},get request(){return request},get calls(){return calls},get value(){return value},success(p=saved){request.ok({coords:p,timestamp:p.timestamp})}};
+ vm.runInNewContext(source,{document:{querySelector:s=>elements[s.slice(1)]},navigator,window:{isSecureContext:secure,addEventListener(k,f){windowListeners[k]=f}},localStorage:{getItem(){if(readError)throw Error();return value},setItem(k,v){if(writeError)throw Error();value=v}},URL,Date,console});
+ return {elements,windowListeners,click(){elements.park.listeners.click()},get request(){return request},get calls(){return calls},get value(){return value},success(p=saved){request.ok({coords:p,timestamp:p.timestamp})}};
 }
 test('nessun GPS all’avvio; trova senza parcheggio non naviga',()=>{const a=app();assert.equal(a.calls,0);let prevented=false;a.elements.find.listeners.click({preventDefault(){prevented=true}});assert.equal(prevented,true);assert.equal(a.elements.find.attrs['aria-disabled'],'true')});
 test('salva coordinate e apre percorso pedonale Google Maps',()=>{const a=app();a.click();assert.equal(a.elements.park.disabled,true);assert.equal(a.request.options.maximumAge,0);assert.equal(a.request.options.enableHighAccuracy,true);a.success();assert.deepEqual(JSON.parse(a.value),saved);const u=new URL(a.elements.find.href);assert.equal(u.origin,'https://www.google.com');assert.equal(u.searchParams.get('destination'),'45.4,9.2');assert.equal(u.searchParams.get('travelmode'),'walking');assert.equal(u.searchParams.get('dir_action'),'navigate');assert.equal(a.elements.park.disabled,false)});
@@ -31,8 +31,12 @@ test('worker installa tutta la shell e la restituisce senza rete',async()=>{
  const listeners={}, entries=new Map();let claimed=false;
  const cache={async addAll(files){for(const file of files)entries.set(new URL(file,'https://example.org/macchina/').href,'cached:'+file)},async match(req){return entries.get(typeof req==='string'?new URL(req,'https://example.org/macchina/').href:req.url)}};
  const removed=[];
- vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v1']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
+ vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v2']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
  let pending;listeners.install({waitUntil(p){pending=p}});await pending;assert.ok(entries.size>=9);
  listeners.activate({waitUntil(p){pending=p}});await pending;assert.deepEqual(removed,['macchina-shell-v0']);assert.equal(claimed,true);
  for(const [file,mode] of [['app.js','cors'],['','navigate'],['unknown','navigate']]){listeners.fetch({request:{url:'https://example.org/macchina/'+file,method:'GET',mode},respondWith(p){pending=p}});assert.match(await pending,/cached:/)}
 });
+
+test('installazione senza prompt apre istruzioni per iPhone e Android',async()=>{const a=app();await a.elements.install.listeners.click();assert.equal(a.elements['install-guide'].open,true)});
+test('Android apre richiesta nativa solo al clic e gestisce annullamento',async()=>{const a=app();let prompted=0,prevented=0;a.windowListeners.beforeinstallprompt({preventDefault(){prevented++},async prompt(){prompted++},userChoice:Promise.resolve({outcome:'dismissed'})});assert.equal(prompted,0);assert.equal(prevented,1);await a.elements.install.listeners.click();assert.equal(prompted,1);assert.equal(a.elements['install-guide'].open,true)});
+test('installazione completata nasconde il pulsante',()=>{const a=app();a.windowListeners.appinstalled();assert.equal(a.elements.install.hidden,true)});

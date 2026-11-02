@@ -70,3 +70,30 @@ if ('serviceWorker' in navigator) {
     document.querySelector('#cache-status').textContent = 'Modalità offline non disponibile. Riapri la pagina con Internet per riprovare.';
   });
 }
+
+let installPrompt = null;
+const install = document.querySelector('#install');
+function installGuide() {
+  const guide = document.querySelector('#install-guide');
+  guide.open = true;
+  guide.querySelector('summary').focus();
+}
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installPrompt = event;
+});
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  install.hidden = true;
+  say('App aggiunta al telefono. Aprila dalla schermata Home.');
+});
+install.addEventListener('click', async () => {
+  if (!installPrompt) { installGuide(); return; }
+  const prompt = installPrompt;
+  installPrompt = null;
+  try {
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome !== 'accepted') installGuide();
+  } catch { installGuide(); }
+});

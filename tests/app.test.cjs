@@ -31,7 +31,7 @@ test('worker installa tutta la shell e la restituisce senza rete',async()=>{
  const listeners={}, entries=new Map();let claimed=false;
  const cache={async addAll(files){for(const file of files)entries.set(new URL(file,'https://example.org/macchina/').href,'cached:'+file)},async match(req){return entries.get(typeof req==='string'?new URL(req,'https://example.org/macchina/').href:req.url)}};
  const removed=[];
- vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v2']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
+ vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{self:{location:{origin:'https://example.org',href:'https://example.org/macchina/sw.js'},clients:{async claim(){claimed=true}},addEventListener(k,f){listeners[k]=f}},URL,caches:{async open(){return cache},async keys(){return ['macchina-shell-v0','unrelated-cache','macchina-shell-v3']},async delete(k){removed.push(k)}},async fetch(){throw Error('offline')}});
  let pending;listeners.install({waitUntil(p){pending=p}});await pending;assert.ok(entries.size>=9);
  listeners.activate({waitUntil(p){pending=p}});await pending;assert.deepEqual(removed,['macchina-shell-v0']);assert.equal(claimed,true);
  for(const [file,mode] of [['app.js','cors'],['','navigate'],['unknown','navigate']]){listeners.fetch({request:{url:'https://example.org/macchina/'+file,method:'GET',mode},respondWith(p){pending=p}});assert.match(await pending,/cached:/)}

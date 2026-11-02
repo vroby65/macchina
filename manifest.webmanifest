@@ -1,0 +1,11 @@
+{
+  "id": "./", "name": "Dov'è la mia macchina?", "short_name": "La mia macchina",
+  "lang": "it", "description": "Salva il parcheggio e ritrova la macchina a piedi.",
+  "start_url": "./", "scope": "./", "display": "standalone",
+  "background_color": "#f6f5ee", "theme_color": "#183c32",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ]
+}

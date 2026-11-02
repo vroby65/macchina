@@ -121,3 +121,41 @@ async function installApp() {
 }
 install.addEventListener('click', installApp);
 installNow.addEventListener('click', installApp);
+
+const APP_URL = 'https://vroby65.github.io/macchina/';
+const inviteGuide = document.querySelector('#invite-guide');
+const inviteShare = document.querySelector('#invite-share');
+const inviteStatus = document.querySelector('#invite-status');
+const inviteLinkBox = document.querySelector('#invite-link-box');
+if (!navigator.share) inviteShare.textContent = 'Copia link';
+document.querySelector('#invite').addEventListener('click', () => {
+  inviteStatus.textContent = '';
+  inviteLinkBox.hidden = true;
+  inviteGuide.showModal();
+});
+document.querySelector('#invite-close').addEventListener('click', () => inviteGuide.close());
+inviteShare.addEventListener('click', async () => {
+  inviteStatus.textContent = '';
+  inviteShare.disabled = true;
+  try {
+    if (navigator.share) {
+      try {
+        await navigator.share({title: "Dov'è la mia macchina?", url: APP_URL});
+        return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(APP_URL);
+      inviteStatus.textContent = 'Link copiato!';
+    } catch {
+      inviteLinkBox.hidden = false;
+      const link = document.querySelector('#invite-link');
+      link.value = APP_URL;
+      link.focus();
+      link.select();
+      inviteStatus.textContent = 'Tieni premuto il link e scegli Copia.';
+    }
+  } finally { inviteShare.disabled = false; }
+});

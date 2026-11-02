@@ -32,3 +32,9 @@ dialog ol{padding-left:32px;margin:24px 0}
 dialog li{padding-left:6px;margin:0 0 24px}
 .chrome-link{text-align:center;text-decoration:none}
 .native-install{background:#183c32;color:white}
+
+.invite-qr{display:block;width:100%;max-width:320px;height:auto;margin:0 auto;background:white}
+.invite-hint{margin:16px 0;text-align:center;font-size:22px}
+#invite-status{margin:16px 0;font-size:22px}
+#invite-status:empty{display:none}
+#invite-link{display:block;width:100%;margin-top:8px;padding:12px;font:inherit;color:#183c32;background:white;border:2px solid #183c32;border-radius:8px}

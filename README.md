@@ -29,6 +29,10 @@ Dopo una prima visita online attendi “App pronta anche offline”. Il service 
 
 Le coordinate non vengono inviate a un backend. Solo l'apertura volontaria del percorso invia a Google la destinazione. GitHub Pages riceve i normali dati delle richieste HTTP, incluso l'IP. Nessun analytics, font remoto o libreria remota. localStorage appartiene all'origine `vroby65.github.io` e non è isolato dagli altri siti sotto lo stesso dominio. Cancella i dati del sito nelle impostazioni del browser per eliminare il parcheggio (questo può rimuovere anche dati di altri siti della stessa origine). La navigazione privata può non conservarlo.
 
+## Invita
+
+Tocca **Invita** per mostrare il QR code. **Condividi link** apre la condivisione del telefono; se non disponibile, il link viene copiato. Se anche la copia è bloccata, appare un campo selezionabile per copiarlo a mano. Il QR funziona anche offline dopo il primo caricamento. Si condivide soltanto l'URL pubblico dell'app, mai il parcheggio salvato.
+
 ## Corso del 10 novembre 2026
 
 Proiettare o stampare `qr-code.png`. Il QR contiene soltanto l'URL pubblico dell'app e non scade.

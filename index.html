@@ -11,8 +11,8 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-<link rel="stylesheet" href="./style.css?v=7">
-<script src="./app.js?v=7" defer></script>
+<link rel="stylesheet" href="./style.css?v=8">
+<script src="./app.js?v=8" defer></script>
 </head>
 <body>
 <main>
@@ -25,15 +25,25 @@
 <p id="message" role="status" aria-live="polite" aria-atomic="true"></p>
 <p id="offline" hidden>Sei offline. Puoi salvare il parcheggio; per il percorso Google Maps può richiedere Internet.</p>
 <button id="install" class="install">Installa</button>
+<button id="invite" class="install">Invita</button>
 <dialog id="install-guide" aria-labelledby="install-title">
 <h2 id="install-title">Installa sul telefono</h2>
 <button id="install-now" class="install native-install" hidden>Installa adesso</button>
 <div id="android-install">
-<a class="install chrome-link" href="intent://vroby65.github.io/macchina/?v=7#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=https%3A%2F%2Fvroby65.github.io%2Fmacchina%2F%3Fv%3D7;end">Apri in Chrome</a>
+<a class="install chrome-link" href="intent://vroby65.github.io/macchina/?v=8#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=https%3A%2F%2Fvroby65.github.io%2Fmacchina%2F%3Fv%3D8;end">Apri in Chrome</a>
 <ol><li>Tocca i tre puntini <b aria-label="menu">⋮</b></li><li>Tocca <b>Aggiungi a schermata Home</b> o <b>Installa app</b></li><li>Conferma con <b>Aggiungi</b> o <b>Installa</b></li></ol>
 </div>
 <div id="ios-install" hidden><ol><li>In Safari, tocca <b>Condividi ↑</b></li><li>Tocca <b>Aggiungi alla schermata Home</b></li><li>Tocca <b>Aggiungi</b></li></ol></div>
 <button id="install-close" class="install">Chiudi</button>
+</dialog>
+<dialog id="invite-guide" aria-labelledby="invite-title">
+<h2 id="invite-title">Invita un amico</h2>
+<img class="invite-qr" src="./qr-code.png" width="370" height="370" alt="QR code per aprire Dov’è la mia macchina?">
+<p class="invite-hint">Inquadra con un altro telefono.</p>
+<button id="invite-share" class="install native-install">Condividi link</button>
+<p id="invite-status" role="status" aria-live="polite"></p>
+<div id="invite-link-box" hidden><label for="invite-link">Link da copiare</label><input id="invite-link" type="text" readonly value="https://vroby65.github.io/macchina/"></div>
+<button id="invite-close" class="install">Chiudi</button>
 </dialog>
 <details><summary>Dettagli e privacy</summary><div><p id="details"></p><p id="cache-status"></p><p>Un solo parcheggio, salvato sul dispositivo. Ogni nuovo salvataggio sostituisce il precedente. Nessun account, backend applicativo o tracciamento.</p><p>Solo “Trova la mia macchina” trasmette a Google le coordinate di destinazione. Google Maps gestisce il percorso e può chiedere accesso alla tua posizione. Il sito è ospitato da GitHub Pages, che riceve i normali dati di accesso web.</p><p>La posizione resta finché non la sostituisci o cancelli i dati del sito. La modalità privata e la pulizia automatica del browser possono eliminarla. Su GitHub Pages lo spazio locale è condiviso con altri siti dello stesso dominio: evita di usarlo per dati sensibili.</p></div></details>
 <footer><a href="https://github.com/vroby65/macchina">Codice aperto · GPL-3.0</a></footer>
